@@ -25,4 +25,33 @@ for j in range(10):
 print(dot_list)
 
 # znalezienie szesciu najwiekszych
+najwieksze_iloczyny = []
+for k in range(6):
+    naj = max(dot_list)
+    ind = dot_list.index(naj)
+    najwieksze_iloczyny.append(list_10[ind])
+    dot_list.remove(naj)
+print(*najwieksze_iloczyny, sep="\n")
+
+# program genetyczny
+nowe = []
+for l in range(5):
+    # losowanie liczb calkowitych - rodzicow
+    l1 = numpy.random.randint(0, 5)
+    l2 = numpy.random.randint(0, 5)
+    pk = numpy.random.randint(0, 5)
+
+    # krzyzowanie
+    rodzic1 = najwieksze_iloczyny[l1]
+    rodzic2 = najwieksze_iloczyny[l2]
+
+    tmp = rodzic1[pk:].copy()
+    rodzic1[pk:], rodzic2[pk:] = rodzic2[pk:], tmp
+
+    nowe.append(rodzic1)
+    nowe.append(rodzic2)
+
+print("#####\n", *nowe, sep="\n")
+
+# program genetyczny - mutacja
 
