@@ -17,7 +17,7 @@ dot_list = []
 for j in range(10):
     dot = numpy.dot(vector, list_10[j])
     dot_list.append(dot)
-print("List of dot products: \n", dot_list)
+print("List of dot products: \n", *dot_list, sep="\n")
 
 max_dots = []
 for k in range(6):
@@ -25,8 +25,7 @@ for k in range(6):
     index = dot_list.index(maximum)
     max_dots.append(list_10[index])
     dot_list.remove(maximum)
-print("List of maximum dot products: ")
-print(*max_dots, sep="\n")
+print("List of maximum dot products: ", *max_dots, sep="\n")
 
 new = []
 for l in range(5):
@@ -42,7 +41,6 @@ for l in range(5):
 
     new.append(p1)
     new.append(p2)
-
 print("List after crossover: \n", *new, sep="\n")
 
 p_mute = 0.35
@@ -58,11 +56,3 @@ for m in range(len(new)):
         new_pop.append(new[m])
 
 print("New population:\n", *new_pop, sep="\n")
-
-# losowanie poczatkowej (pierwsze 10 list)
-# szesc list dajacych najwiekszy iloczyn skalarny
-# losowanie pieciu par rodzicow
-# krzyzowanie rodzicow (10 potomkow)
-# dla kazdego potomka losowanie czy zajdzie mutacja - jesli tak, to mutowanie losowego genu
-# wybor szesciu najlepszych potomkow
-# jesli przekroczenie liczby pokolen, to koniec programu, jesli nie, to pkt 2
