@@ -56,3 +56,14 @@ for m in range(len(new)):
         new_pop.append(new[m])
 
 print("New population:\n", *new_pop, sep="\n")
+
+dot_list = []
+for j in range(10):
+    dot = numpy.dot(vector, new_pop[j])
+    dot_list.append(dot)
+print("List of dot products: \n", *dot_list, sep="\n")
+
+maximum = max(dot_list)
+index = dot_list.index(maximum)
+best = new_pop[index]
+print("The best list: ", best)

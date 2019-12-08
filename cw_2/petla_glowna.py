@@ -6,6 +6,8 @@ size = 6
 weights = [4, -3, 3.5, 5, -7, 4.2]
 start_list = []
 p_mute = 0.35
+end = 0
+iteration = 0
 
 for j in range(pop_size):
     element = list(numpy.random.uniform(low=-4.0, high=4.0, size=size))
@@ -17,7 +19,6 @@ for i in range(generations):
     for k in range(len(start_list)):
         dot = numpy.dot(weights, start_list[k])
         dot_list.append(dot)
-    print("List of dot products: \n", dot_list)
 
     max_dots = []
     for l in range(6):
@@ -25,7 +26,6 @@ for i in range(generations):
         index = dot_list.index(maximum)
         max_dots.append(start_list[index])
         dot_list.remove(maximum)
-    print("List of maximum dot products: ", *max_dots, sep="\n")
 
     new = []
     for l in range(5):
@@ -41,7 +41,6 @@ for i in range(generations):
 
         new.append(p1)
         new.append(p2)
-    print("List after crossover: \n", *new, sep="\n")
 
     new_pop = []
     for m in range(len(new)):
@@ -53,10 +52,17 @@ for i in range(generations):
             new_pop.append(new[m])
         else:
             new_pop.append(new[m])
-    print("New population:\n", *new_pop, sep="\n")
     start_list = new_pop
 
-print("Last population: \n", *start_list, sep="\n")
+    last_dot_list = []
+    for j in range(10):
+        dot = numpy.dot(weights, start_list[j])
+        last_dot_list.append(dot)
+    maximum = max(last_dot_list)
 
-
+    if maximum > end:
+        end = maximum
+        iteration = i
+print("The best value: \n", end)
+print("Generation: ", iteration)
 
