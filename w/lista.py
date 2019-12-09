@@ -1,18 +1,19 @@
 try:
-    f = open("lista2.txt", 'r+')
+    file = open("lista.txt", 'r+')
+    print(open("lista.txt", 'r+').read())
 except IOError:
-    f = open("lista2.txt", 'w')
-lista = []
+    file = open("lista.txt", 'w')
+students = []
 t = ''
-while t != 'y':
-    t = input("Podaj liste studentow > [koniec: y ]")
-    lista.append(t)
-lista = lista[:len(lista)-1]
-if f.mode == 'w':
-    for line in lista:
-        f.write(line + '\n')
+while t != 'K':
+    t = input("Podaj liste studentow: [koniec: K ]")
+    students.append(t)
+students = students[:len(students)-1]
+if file.mode == 'w':
+    for line in students:
+        file.write(line + '\n')
 else:
-    f.seek(0,2)
-    for line in lista:
-        f.write(line + '\n')
-f.close()
+    file.seek(0, 2)
+    for line in students:
+        file.write(line + '\n')
+file.close()

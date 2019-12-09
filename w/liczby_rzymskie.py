@@ -1,8 +1,16 @@
-dict_numbers = {1: "I", 2: "dwa", 3: "trzy", 4: "cztery", 5: "pięć", 6: "sześć",
-                7: "siedem", 8: "osiem", 9: "dziewięć", 10: "dziesięć", 11: "jedenaście",
-                12: "dwanaście", 13: "trzynaście", 14: "czternaście", 15: "piętnaście",
-                16: "szesnaście", 17: "siedemnaście", 18: "osiemnaście",
-                19: "dziewiętnaście", 20: "dwadzieścia", 30: "trzydzieści",
-                40: "czterdzieści", 50: "pięćdziesiąt", 60: "sześćdziesiąt", 70: "siedemdziesiąt", 80: "osiemdziesiąt",
-                90: "dziewięćdziesiąt", 100: "sto", 200: "dwieście", 300: "trzysta", 400: "czterysta", 500: "pięćset",
-                600: "sześćset", 700: "siedemset", 800: "osiemset", 900: "dziewięćset", 1000: "tysiąc"}
+roman_num = input("Podaj liczbę w postaci rzymskiej:")
+print("Liczba", roman_num, "to:", end=" ")
+roman_dict = {"M": 1000, "CM": 900, "D": 500, "CD": 400, "C": 100, "XC": 90, "L": 50, "XL": 40, "X": 10, "IX": 9,
+              "V": 5, "IV": 4, "I": 1}
+r = list(roman_dict.keys())
+lr = 0
+
+while len(roman_num) != 0:
+    for i in r:
+        if roman_num.find(i) == 0:
+            lr += roman_dict[i]
+            if len(i) == 1:
+                roman_num = roman_num[roman_num.find(i) + 1:]
+            else:
+                roman_num = roman_num[roman_num.find(i) + 2:]
+print(lr)
