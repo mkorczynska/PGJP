@@ -1,16 +1,21 @@
-a = int(input("Podaj poczatek zakresu >"))
-b = int(input("Podaj koniec zakresu >"))
-n = int(input("Podaj liczbe lini do wygenerowani >"))
-f = open("losowanie2.txt",'w')
-lib1 = 0
-listalib = []
+from random import randint
+
+a = int(input("Poczatek zakresu (liczba a): "))
+b = int(input("Koniec zakresu (liczba b): "))
+n = int(input("Liczba linii do wygenerowania (n): "))
+
+f = open("losowanie_2.txt", 'w')
+number = 0
+numlist = []
 if n > b-a+1:
     n = b-a+1
-from random import randint
+
+print("Liczba linii do wygenerowania: ", n)
+
 for x in range(n):
-    lib1 = randint(a,b)
-    while lib1 in listalib:
-        lib1 = randint(a,b)
-    listalib.append(lib1)
-    f.write(str(lib1)+'\n')
+    number = randint(a, b)
+    while number in numlist:
+        number = randint(a, b)
+    numlist.append(number)
+    f.write(str(number)+'\n')
 f.close()
