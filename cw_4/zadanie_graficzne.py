@@ -11,7 +11,7 @@ p_mute1 = 0.18
 p_mute2 = 0.12
 # ---------------------
 
-im = Image.open('gen_1.png')
+im = Image.open('gen.png')
 im.save('gen_copy.png')
 im.close()
 im = Image.open('gen_copy.png')
@@ -24,16 +24,16 @@ for i in range(0, n):
     print(pop[i])
 
 
-# i = 0
-# obr = ImageDraw.Draw(im)
-# for j in range(0, dl_genu):
-#     obr.ellipse([pop[i][j][0] - 10, pop[i][j][1] - 10, pop[i][j][0] + 10, pop[i][j][1] + 10], fill='red', outline='red')
-# im.load()
-# im.show()
-#
-# k = int(im.getcolors()[-1][0])
-# im.close()
-# print(k)
+i = 0
+obr = ImageDraw.Draw(im)
+for j in range(0, dl_genu):
+    obr.ellipse([pop[i][j][0] - 10, pop[i][j][1] - 10, pop[i][j][0] + 10, pop[i][j][1] + 10], fill='red', outline='red')
+im.load()
+im.show()
+
+k = int(im.getcolors()[-1][0])
+im.close()
+print(k)
 
 
 def zliczanie_czarnych(popul, l_os):
@@ -119,4 +119,4 @@ if rm.random() < p_mute2: nowy2 = step(nowy2, dl_genu)
 potomek = []
 potomek += [nowy1, nowy2]
 
-print(potomek)
+print("Potomek: ", potomek)
