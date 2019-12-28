@@ -12,7 +12,7 @@ p_mute2 = 0.12
 # ---------------------
 
 
-# FUNCTIONS -----------
+# ---------------------
 def licz_czarne(p, l_os):
     eval_l = []
     for k in range(0, l_os):
@@ -35,7 +35,6 @@ def mut(gen, dl):
 
 def step(gen, dl):
     t, j = rm.randint(0, dl - 1), rm.randint(0, dl - 1)
-
     gen[t][0] += int((rm.random() - 0.5) * 0.25 * 5)
     gen[j][0] += int((rm.random() - 0.5) * 0.25 * 5)
 
@@ -67,7 +66,6 @@ populacja = populacja_poczatkowa
 
 for pokolenie in range(0, 50):
     dzieci = []
-    # losowanie rodzicow
     for i in range(0, 12):
         r1 = rm.randint(0, n - 1)
         r2 = rm.randint(0, n - 1)
@@ -121,7 +119,6 @@ for pokolenie in range(0, 50):
         najlepsi.append(nowa_populacja[indeks])
         nowa_populacja.remove(nowa_populacja[indeks])
         czarne.remove(czarne[indeks])
-        # w += 1
     populacja = najlepsi
     czarne = licz_czarne(populacja, len(populacja))
     najmniej_czarnych = min(czarne)
@@ -134,8 +131,3 @@ for pokolenie in range(0, 50):
                      + 10, populacja[indeks][j][1] + 10], fill='red', outline='red')
     im.save('gen%d.png' % pokolenie)
     im.close()
-
-# print("nowa populacja: ")
-# for i in range(len(populacja)):
-#     print(populacja[i])
-#     print("\n")
