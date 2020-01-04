@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import random as rd
 
-towns = [(30, 70), (50, 60), (30, 50), (0, 40), (50, 20), (30, 0), (30, 20), (40, 30), (60, 30)]
+
+# FUNKCJE ------------------------------
 
 
 def cartesian_matrix(coordinates):
@@ -25,35 +26,6 @@ def tour_length(matrix, tour):
     return total
 
 
-m = cartesian_matrix(towns)
-print("M:", m)
-
-t = [0, 8, 3, 2, 1, 5, 6, 7, 4]
-print(t, "%8.3f" % tour_length(m, t))
-
-wspx, wspy = zip(*towns)
-plt.scatter(wspx, wspy)
-for j in range(len(t)):
-    plt.annotate(j, towns[t[j]])
-
-for i in range(len(t)-1):
-    lines = plt.plot((wspx[i], wspx[i+1]), (wspy[i], wspy[i+1]))
-    plt.setp(lines, color='r', linewidth=1.5)
-plt.show()
-
-no_first_pop = 16
-new_population = []
-
-for i in range(0, no_first_pop):
-    rd.shuffle(t)
-    ax = list(t)
-    new_population.append(ax)
-
-print("Populacja początkowa: ")
-for i in range(len(new_population)):
-    print(new_population[i], "%8.3f" % tour_length(m, new_population[i]))
-
-
 def choice_for_crossover(pop, no_crossover):
     pop_chosen = []
     len_tours = [tour_length(m, os) for os in pop]
@@ -62,14 +34,6 @@ def choice_for_crossover(pop, no_crossover):
         pop_chosen.append(pop[max_fitness_idx])
         len_tours[max_fitness_idx] = 9999999999
     return pop_chosen[:no_crossover]
-
-
-no_for_crossover = 10
-chosen_pop = choice_for_crossover(new_population, no_for_crossover)
-
-print("Wybrane: ")
-for i in range(len(chosen_pop)):
-    print(chosen_pop[i], "%8.3f" % tour_length(m, chosen_pop[i]))
 
 
 def crossover(parents, offspring_size):
@@ -90,12 +54,6 @@ def crossover(parents, offspring_size):
     return offspring
 
 
-off = crossover(chosen_pop, no_for_crossover)
-print("Potomkowie")
-for i in range(0, no_for_crossover):
-    print(off[i], "%8.3f" % tour_length(m, off[i]))
-
-
 def mutation(offspring_crossover, p_m, offspring_size):
     for idx in range(0, offspring_size):
         pr = rd.uniform(0, 1)
@@ -108,25 +66,40 @@ def mutation(offspring_crossover, p_m, offspring_size):
         return offspring_crossover
 
 
+towns = [(30, 70), (50, 60), (30, 50), (0, 40), (50, 20), (30, 0), (30, 20), (40, 30), (60, 30)]
+m = cartesian_matrix(towns)
+no_first_pop = 16
+new_population = []
+t = [0, 8, 3, 2, 1, 5, 6, 7, 4]
+no_for_crossover = 10
 p_mute = 0.5
-m_off = mutation(off, p_mute, no_for_crossover)
-print("Potomkowie po mutacji: ")
-for i in range(0, no_for_crossover):
-    print(m_off[i], "%8.3f" % tour_length(m, m_off[i]))
 
+for i in range(0, no_first_pop):
+    rd.shuffle(t)
+    ax = list(t)
+    new_population.append(ax)
 
-# print(" -----------pop--------------")
-# for i in range(0, no_first_pop):
-#     print(new_population[i], "%8.3f" % tour_length(m, new_population[i]))
-# print(" -----------pop-chosen--------")
-# chosen_pop = choice_for_crossover(new_population, no_for_crossover)
-# for i in range(0, no_for_crossover):
-#     print(chosen_pop[i], "%8.3f" % tour_length(m, chosen_pop[i]))
-# off = crossover(chosen_pop, no_for_crossover)
-# print("------potomkowie---------")
-# for i in range(0, no_for_crossover)
-#     print(off[i], "%8.3f" % tour_length(m, off[i]))
-# off = mutation(off, p_mute, no_for_crossover)
-# print("----po mutacji----")
-# for i in range(0, no_for_crossover):
-#     print(off[i], "%8.3f" % tour_length(m, off[i]))
+print("Populacja początkowa: ")
+for i in range(len(new_population)):
+    print(new_population[i], "%8.3f" % tour_length(m, new_population[i]))
+
+for i in range(10):
+    chosen_pop = choice_for_crossover(new_population, no_for_crossover)
+    off = crossover(chosen_pop, no_for_crossover)
+    m_off = mutation(off, p_mute, no_for_crossover)
+    new_population = m_off
+
+print("Populacja końcowa: ")
+for i in range(len(new_population)):
+    print(new_population[i], "%8.3f" % tour_length(m, new_population[i]))
+# NA KONIEC NARYSOWAC NAJLEPSZA TRASE
+#
+# wspx, wspy = zip(*towns)
+# plt.scatter(wspx, wspy)
+# for j in range(len(t)):
+#     plt.annotate(j, towns[t[j]])
+#
+# for i in range(len(t)-1):
+#     lines = plt.plot((wspx[i], wspx[i+1]), (wspy[i], wspy[i+1]))
+#     plt.setp(lines, color='r', linewidth=1.5)
+# plt.show()
