@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import random as rd
 
-
 # FUNKCJE ------------------------------
 
 
@@ -66,6 +65,21 @@ def mutation(offspring_crossover, p_m, offspring_size):
         return offspring_crossover
 
 
+def display_path(path, cities):
+    wspx, wspy = zip(*cities)
+
+    for i in range(len(path) - 1):
+        plt.plot(
+            (wspx[path[i]], wspx[path[i + 1]]),
+            (wspy[path[i]], wspy[path[i + 1]]),
+            color="r"
+        )
+        plt.scatter(wspx, wspy)
+        for j, city in enumerate(cities):
+            plt.annotate(j, city)
+    plt.show()
+
+
 towns = [(30, 70), (50, 60), (30, 50), (0, 40), (50, 20), (30, 0), (30, 20), (40, 30), (60, 30)]
 m = cartesian_matrix(towns)
 no_first_pop = 16
@@ -74,32 +88,41 @@ t = [0, 8, 3, 2, 1, 5, 6, 7, 4]
 no_for_crossover = 10
 p_mute = 0.5
 
+# losowanie populacji poczatkowej (16 drog)
 for i in range(0, no_first_pop):
     rd.shuffle(t)
+    first = t[0]
     ax = list(t)
+    ax.append(first)
     new_population.append(ax)
 
 print("Populacja początkowa: ")
 for i in range(len(new_population)):
     print(new_population[i], "%8.3f" % tour_length(m, new_population[i]))
 
+for j in range(len(new_population)):
+    new_population[j].pop()
+
 for i in range(10):
+    # wybor nalepszych 10 drog
     chosen_pop = choice_for_crossover(new_population, no_for_crossover)
+    # losowanie par rodzicow i krzyzowanie
     off = crossover(chosen_pop, no_for_crossover)
+    # mutacja
     m_off = mutation(off, p_mute, no_for_crossover)
-    new_population = m_off
+    # wybor szesciu najlepszych dzieci
+    best_off = choice_for_crossover(m_off, 6)
+    # wybor szesciu najlepszych rodzicow
+    best_par = choice_for_crossover(chosen_pop, 6)
+    new_population = best_off+best_par
+
+for j in range(len(new_population)):
+    first_elem = new_population[j][0]
+    new_population[j].append(first_elem)
 
 print("Populacja końcowa: ")
 for i in range(len(new_population)):
     print(new_population[i], "%8.3f" % tour_length(m, new_population[i]))
-# NA KONIEC NARYSOWAC NAJLEPSZA TRASE
-#
-# wspx, wspy = zip(*towns)
-# plt.scatter(wspx, wspy)
-# for j in range(len(t)):
-#     plt.annotate(j, towns[t[j]])
-#
-# for i in range(len(t)-1):
-#     lines = plt.plot((wspx[i], wspx[i+1]), (wspy[i], wspy[i+1]))
-#     plt.setp(lines, color='r', linewidth=1.5)
-# plt.show()
+
+best = choice_for_crossover(new_population, 1)
+display_path(best[0], towns)
