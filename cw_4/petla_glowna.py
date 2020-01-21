@@ -58,8 +58,8 @@ rm.seed(72)
 for i in range(0, n):
     cele = [[rm.randint(0, szer_mapy), rm.randint(0, wys_mapy)] for j in range(0, dl_genu)]
     populacja_poczatkowa += [cele]
-for i in range(0, n):
-    print(populacja_poczatkowa[i])
+# for i in range(0, n):
+#    print(populacja_poczatkowa[i])
 
 czarne = licz_czarne(populacja_poczatkowa, n)
 populacja = populacja_poczatkowa

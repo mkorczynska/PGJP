@@ -1,146 +1,273 @@
-import numpy
-import random as rd
 import math
-
-# algorytm ewolucyjny
-# generations = int(input("number of generations: "))
-pop_size = 10
-size = 6
-populacja_poczatkowa = []
-p_mute = 0.35
-end = 0
-iteration = 0
+import random as rd
+import time
 
 
-def ile_bitow_rzeczywiste(granica_a, granica_b, c):
-    r = (granica_b - granica_a) * (10 ^ c)
-    ile_bitow = 0
-    while r > 2 ** ile_bitow:
-        ile_bitow = ile_bitow + 1
-    return ile_bitow
+def dziesietne_binarne(liczba, n):
+    top = (2 ** n) - 1
+    if liczba > top:
+        print("Liczba znajduje się poza zakresem.")
+        string = "1" * n
+        return string
+    else:
+        s = bin(liczba)
+        return s[2:len(s)].zfill(n)
 
 
-def zamiana_rzeczywiste(populacja, ile_bitow, granica_a, granica_b):
-    rzeczywiste = []
+def binarne_dziesietne(liczba, n):
+    wynik = 0
+    for i in range(n):
+        wynik += (2 ** i) * int(liczba[len(liczba) - i - 1])
+    return wynik
+
+
+def dost(start, stop, n, liczba):
+    zasieg = stop - start
+    top = (2 ** n) - 1
+    wynik = liczba * (zasieg / top) + start
+    return wynik
+
+
+def funkcja(x):
+    wynik = 2 * math.sin(x) - 3 * math.sin(x ** 2) + 1
+    return wynik
+
+
+def populacja(n1, n2):
+    wynik = []
+    temp3 = []
+    temp = (2 ** n1)
+    for i in range(n2):
+        while True:
+            temp2 = rd.randrange(0, temp)
+            check = 0
+            if i == 0:
+                temp3.append(temp2)
+                wynik.append(dziesietne_binarne(temp2, n1))
+                break
+            else:
+                for i in range(len(temp3)):
+                    if temp2 == temp3[i]:
+                        check = 1
+                if check == 0:
+                    temp3.append(temp2)
+                    wynik.append(dziesietne_binarne(temp2, n1))
+                    break
+
+    return wynik
+
+
+def selekcja_elitarna(populacja, n1, n2, start, stop):
+    temp = []
+    wynik = populacja
     for i in range(len(populacja)):
-        wartosc_osobnika = 0
-        osobnik = populacja[i]
-        osobnik = osobnik[::-1]
-        for j in range(ile_bitow):
-            wartosc_bit = osobnik[j] * (2 ** j)
-            wartosc_osobnika = wartosc_osobnika + wartosc_bit
-        wartosc_rzeczywista = granica_a + ((granica_b - granica_a) * wartosc_osobnika) / ((2 ** ile_bitow) - 1)
-        rzeczywiste.append(wartosc_rzeczywista)
-    return rzeczywiste
-
-# def wartosc_osobnika(populacja):
-
-# -------------------- kodowanie logarytmiczne
-
-# -------------------- kodowanie zmiennoprzecinkowe
-
-# -------------------- algorytm ewolucyjny
-m = ile_bitow_rzeczywiste(0, 31, 6)
-for j in range(pop_size):
-    osobnik = numpy.random.choice([0, 1], size=m)
-    populacja_poczatkowa.append(osobnik)
-print("List of 10 lists:\n", *populacja_poczatkowa, sep="\n")
-rzeczywiste = zamiana_rzeczywiste(populacja_poczatkowa, m, 0, 31)
-for i in range(pop_size):
-    print(populacja_poczatkowa[i])
-    print(rzeczywiste[i])
+        temp2 = binarne_dziesietne(populacja[i], n1)
+        temp2 = dost(start, stop, n1, temp2)
+        temp.append(funkcja(temp2))
+    dl = len(temp)
+    for i in range(n2):
+        tempmin = min(temp)
+        for j in range(dl):
+            if temp[j] == tempmin:
+                wynik.pop(j)
+                temp.pop(j)
+                dl -= 1
+                break
+    return wynik
 
 
-def ruletka(liczby_rzeczywiste, populacja):
-    suma_ocen = sum(liczby_rzeczywiste)
-    prawdopodobienstwa = [x / suma_ocen for x in liczby_rzeczywiste]
-    dystr = 0
-    kolo_ruletki = []
-    for i in range(len(liczby_rzeczywiste)):
-        dystr = dystr + prawdopodobienstwa[i]
-        kolo_ruletki.append(dystr)
-    licznik = 0
-    rodzice = []
-    for j in range(2):
-        los = rd.uniform(0, 1)
-        print(los)
-        while los > kolo_ruletki[licznik]:
-            licznik = licznik + 1
-        rodzic = populacja[licznik]
-        rodzice.append(rodzic)
-    return rodzice
+def selekcja_czesciowa(populacja, n1, n2, start, stop):
+    temp = []
+    temp3 = []
+    tempN = int(n2 / 2)
+    tempN2 = n2 - tempN
+    for i in range(tempN):
+        if i == 0:
+            temp.append(rd.randrange(0, len(populacja)))
+            temp3.append(populacja[temp[0]])
+        else:
+            while True:
+                check = 0
+                temp2 = rd.randrange(0, len(populacja))
+                for i in range(len(temp)):
+                    if temp2 == temp[i]:
+                        check = 1
+                if check == 0:
+                    temp.append(temp2)
+                    temp3.append(populacja[temp2])
+                    break
+    wynik = populacja
+    for i in range(len(temp3)):
+        for j in range(len(populacja)):
+            if populacja[j] == temp3[i]:
+                wynik.pop(i)
+                break
+    wynik = selekcja_elitarna(wynik, n1, tempN2, start, stop)
+    return wynik
 
 
-rodzice_ruletka = ruletka(rzeczywiste, populacja_poczatkowa)
-print("R1", rodzice_ruletka)
+def krzyzowanie_1(rodzic1, rodzic2, n):
+    los = rd.randrange(0, n)
+    temprodzic1 = list(rodzic1)
+    temprodzic2 = list(rodzic2)
+    dl = len(temprodzic1)
+    wynik1 = []
+    wynik2 = []
+    wynik = []
+    for i in range(dl):
+        if i >= los:
+            wynik1.append(temprodzic2[i])
+            wynik2.append(temprodzic1[i])
+        else:
+            wynik1.append(temprodzic1[i])
+            wynik2.append(temprodzic2[i])
+    tempstr1 = "".join(wynik1)
+    tempstr2 = "".join(wynik2)
+    wynik.append(tempstr1)
+    wynik.append(tempstr2)
+    return wynik
 
 
-def turniej(liczby_rzeczywiste, rozmiar_turnieju, populacja):
-    wartosci = []
-    rodzice = []
-    for j in range(2):
-        for i in range(rozmiar_turnieju):
-            los = rd.randint(0, pop_size-1)
-            wartosci.append(liczby_rzeczywiste[los])
-        najwieksza_wartosc = max(wartosci)
-        indeks = liczby_rzeczywiste.index(najwieksza_wartosc)
-        rodzic = populacja[indeks]
-        rodzice.append(rodzic)
-    return rodzice
+def krzyzowanie_2(rodzic1, rodzic2, n):
+    los1 = rd.randrange(0, n)
+    while True:
+        los2 = rd.randrange(0, n)
+        if los1 != los2:
+            break
+    if los1 > los2:
+        temp = los1
+        los1 = los2
+        los2 = temp
+    temprodzic1 = list(rodzic1)
+    temprodzic2 = list(rodzic2)
+    dl = len(temprodzic1)
+    wynik1 = []
+    wynik2 = []
+    wynik = []
+    for i in range(dl):
+        if i >= los1:
+            if i >= los2:
+                wynik1.append(temprodzic1[i])
+                wynik2.append(temprodzic2[i])
+            else:
+                wynik1.append(temprodzic2[i])
+                wynik2.append(temprodzic1[i])
+        else:
+            wynik1.append(temprodzic1[i])
+            wynik2.append(temprodzic2[i])
+    tempstr1 = "".join(wynik1)
+    tempstr2 = "".join(wynik2)
+    wynik.append(tempstr1)
+    wynik.append(tempstr2)
+    return wynik
 
 
-rodzice_turniej = turniej(rzeczywiste, 2, populacja_poczatkowa)
-print("R2", rodzice_turniej)
+def mutacja_rownomierna(x, n, p_mute):
+    los1 = rd.randrange(0, n)
+    los2 = rd.randint(0, 1)
+    los3 = rd.randint(0, 1)
+    temp = list(x)
+    if los3 < p_mute:
+        temp[los1] = str(los2)
+    wynik = "".join(temp)
+    return wynik
 
 
-def jednopunktowe(rodzice):
-    potomkowie = []
-    potomek1 = rodzice[0]
-    potomek2 = rodzice[1]
-    punkt_krzyzowania = rd.randint(0, len(potomek1))
-
-    tmp = potomek1[punkt_krzyzowania:].copy()
-    potomek1[punkt_krzyzowania:], potomek2[punkt_krzyzowania:] = potomek2[punkt_krzyzowania:], tmp
-    potomkowie.append(potomek1)
-    potomkowie.append(potomek2)
-    return potomkowie
-
-
-dzieci = jednopunktowe(rodzice_ruletka)
-print("Dzieci:", dzieci)
-
-
-def dwupunktowe(rodzice):
-    potomkowie = []
-    potomek1 = rodzice[0]
-    potomek2 = rodzice[1]
-    punkt_krzyzowania_1 = rd.randint(0, len(potomek1)-1)
-    punkt_krzyzowania_2 = 0
-    while punkt_krzyzowania_1 > punkt_krzyzowania_2:
-        punkt_krzyzowania_2 = rd.randint(0, len(potomek1))
-    tmp = potomek1[punkt_krzyzowania_1:punkt_krzyzowania_2].copy()
-    potomek1[punkt_krzyzowania_1:punkt_krzyzowania_2], potomek2[punkt_krzyzowania_1:punkt_krzyzowania_2] = \
-        potomek2[punkt_krzyzowania_1:punkt_krzyzowania_2], tmp
-    potomkowie.append(potomek1)
-    potomkowie.append(potomek2)
-    return potomkowie
+def mutacja_gaussowska(x, n, p_mute):
+    los = rd.randint(0, 1)
+    temp = binarne_dziesietne(x, n)
+    range = (2 ** n) - 1
+    range = range * 0.1
+    if los < p_mute:
+        while True:
+            gauss = int(rd.gauss(temp, range))
+            if gauss > 0:
+                if gauss < (2 ** n) - 1:
+                    break
+        wynik = dziesietne_binarne(gauss, n)
+    else:
+        wynik = dziesietne_binarne(temp, n)
+    return wynik
 
 
-dzieci_2 = dwupunktowe(rodzice_ruletka)
-print("D2", dzieci_2)
-
-# krzyzowanie arytmetyczne
-
-# ---------------------------------------sukcesja i zastepowanie
-# sukcesja z czesciowym zastepowaniem
-
-# sukcesja elitarna
+def SelekcjaW(x, populacja, n1, n2, start, stop):
+    if x == 0:
+        wynik = selekcja_czesciowa(populacja, n1, n2, start, stop)
+    else:
+        wynik = selekcja_elitarna(populacja, n1, n2, start, stop)
+    return wynik
 
 
-# --------------------- operatory mutacji
+x = populacja(5, 10)
 
-# mutacja rownomierna
 
-# mutacja gaussowska
+def RodziceW(populacja):
+    dl = len(populacja)
+    wynik = []
+    temp = rd.randrange(0, dl)
+    wynik.append(temp)
+    while True:
+        temp2 = rd.randrange(0, dl)
+        # print(temp2)
+        if temp2 != temp:
+            wynik.append(temp2)
+            break
+    return wynik
 
-# --------------------- analiza
+
+def KrzyzowanieW(x, populacja, n):
+    indexes = RodziceW(populacja)
+    rodzic1 = populacja[indexes[0]]
+    rodzic2 = populacja[indexes[1]]
+    if x == 0:
+        wynik = krzyzowanie_1(rodzic1, rodzic2, n)  # krzyzowanie jednopunktowe
+    else:
+        wynik = krzyzowanie_2(rodzic1, rodzic2, n)  # krzyzowanie dwupunktowe
+    return wynik
+
+
+def MutacjaW(x, x2, n, p_mute):
+    if (x == 0):
+        wynik = mutacja_rownomierna(x2, n, p_mute)
+    else:
+        wynik = mutacja_gaussowska(x2, n, p_mute)
+    return wynik
+
+
+selekcja = input("Wybierz rodzaj selekcji : 0 - selekcja z częściowym zastępowaniem, 1 - elitarna ")
+selekcja = int(selekcja)
+krzyzowanie = input("Wybierz rodzaj krzyrzowania: 0 - jednopunktowe, 1 - dwupunktowe")
+krzyzowanie = int(krzyzowanie)
+mutacja = input("Wybierz rodzaj mutacji: 0 - równomierna, 1 - gaussowska ")
+mutacja = int(mutacja)
+pokolenia = 2000  # liczba pokolen
+populac = 100  # poczatkowa wielkosc populacji, nowoutworzona populacja osobników.
+wynik = 8  # oczekiwana liczba rezultatow
+pm = 0.3  # prawdopodobienstwo wystapienia mutacji
+przedzial_1 = 5  # początkowa wartość przedziału
+przedzial_2 = 10  # koncowa wartość przedziału
+nbin = 15
+
+time1 = time.time()
+x_st = populacja(nbin, populac)
+
+for i in range(pokolenia):
+    y_st = KrzyzowanieW(krzyzowanie, x_st, nbin)
+    z_st1 = MutacjaW(mutacja, y_st[0], nbin, pm)
+    z_st2 = MutacjaW(mutacja, y_st[1], nbin, pm)
+    x_st.append(z_st1)
+    x_st.append(z_st2)
+    nil = len(x_st) - wynik
+    x_st = SelekcjaW(selekcja, x_st, nbin, nil, przedzial_1, przedzial_2)
+time2 = time.time()
+time_score = time2 - time1
+print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
+print("Wynik: ")
+licznik = 0
+x1 = 0
+x2 = 0
+for i in range(len(x_st)):
+    x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
+    x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
+    licznik += 1
+print(x2 / licznik)
