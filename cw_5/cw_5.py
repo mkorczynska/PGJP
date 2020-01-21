@@ -12,9 +12,6 @@ end = 0
 iteration = 0
 
 
-############################################################
-
-
 def ile_bitow_rzeczywiste(granica_a, granica_b, c):
     r = (granica_b - granica_a) * (10 ^ c)
     ile_bitow = 0
@@ -36,8 +33,8 @@ def zamiana_rzeczywiste(populacja, ile_bitow, granica_a, granica_b):
         rzeczywiste.append(wartosc_rzeczywista)
     return rzeczywiste
 
+# def wartosc_osobnika(populacja):
 
-##########################################################
 # -------------------- kodowanie logarytmiczne
 
 # -------------------- kodowanie zmiennoprzecinkowe
@@ -75,7 +72,7 @@ def ruletka(liczby_rzeczywiste, populacja):
 
 
 rodzice_ruletka = ruletka(rzeczywiste, populacja_poczatkowa)
-print(rodzice_ruletka)
+print("R1", rodzice_ruletka)
 
 
 def turniej(liczby_rzeczywiste, rozmiar_turnieju, populacja):
@@ -83,7 +80,7 @@ def turniej(liczby_rzeczywiste, rozmiar_turnieju, populacja):
     rodzice = []
     for j in range(2):
         for i in range(rozmiar_turnieju):
-            los = rd.randint(0, len(liczby_rzeczywiste))
+            los = rd.randint(0, pop_size-1)
             wartosci.append(liczby_rzeczywiste[los])
         najwieksza_wartosc = max(wartosci)
         indeks = liczby_rzeczywiste.index(najwieksza_wartosc)
@@ -93,25 +90,52 @@ def turniej(liczby_rzeczywiste, rozmiar_turnieju, populacja):
 
 
 rodzice_turniej = turniej(rzeczywiste, 2, populacja_poczatkowa)
-print(rodzice_turniej)
-# ------------------- metody reprodukcji i sukcesji
-
-# kolo ruletki
-
-# selekcja turniejowa
+print("R2", rodzice_turniej)
 
 
+def jednopunktowe(rodzice):
+    potomkowie = []
+    potomek1 = rodzice[0]
+    potomek2 = rodzice[1]
+    punkt_krzyzowania = rd.randint(0, len(potomek1))
+
+    tmp = potomek1[punkt_krzyzowania:].copy()
+    potomek1[punkt_krzyzowania:], potomek2[punkt_krzyzowania:] = potomek2[punkt_krzyzowania:], tmp
+    potomkowie.append(potomek1)
+    potomkowie.append(potomek2)
+    return potomkowie
+
+
+dzieci = jednopunktowe(rodzice_ruletka)
+print("Dzieci:", dzieci)
+
+
+def dwupunktowe(rodzice):
+    potomkowie = []
+    potomek1 = rodzice[0]
+    potomek2 = rodzice[1]
+    punkt_krzyzowania_1 = rd.randint(0, len(potomek1)-1)
+    punkt_krzyzowania_2 = 0
+    while punkt_krzyzowania_1 > punkt_krzyzowania_2:
+        punkt_krzyzowania_2 = rd.randint(0, len(potomek1))
+    tmp = potomek1[punkt_krzyzowania_1:punkt_krzyzowania_2].copy()
+    potomek1[punkt_krzyzowania_1:punkt_krzyzowania_2], potomek2[punkt_krzyzowania_1:punkt_krzyzowania_2] = \
+        potomek2[punkt_krzyzowania_1:punkt_krzyzowania_2], tmp
+    potomkowie.append(potomek1)
+    potomkowie.append(potomek2)
+    return potomkowie
+
+
+dzieci_2 = dwupunktowe(rodzice_ruletka)
+print("D2", dzieci_2)
+
+# krzyzowanie arytmetyczne
+
+# ---------------------------------------sukcesja i zastepowanie
 # sukcesja z czesciowym zastepowaniem
 
 # sukcesja elitarna
 
-# -------------------- operatory krzyzowania
-
-# krzyzowanie jednopuntkowe
-
-# krzyzowanie dwupunktowe
-
-# krzyzowanie arytmetyczne
 
 # --------------------- operatory mutacji
 
