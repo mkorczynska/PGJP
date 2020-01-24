@@ -1,11 +1,12 @@
 import pandas as pd
 import random as rd
 
-kapital_poczatkowy = 400
-data = {"piwo": ["Porter", "Pszeniczne", "Pale Ale", "Lager", "Pilzner", "Koźlak", "Stout", "Klasztorne"],
+kapital_poczatkowy = 600
+data = {"piwo": ["Porter", "Pszeniczne", "Pale Ale",
+                 "Lager", "Pilzner", "Koźlak", "Stout", "Klasztorne"],
         "kod": ["000", "001", "010", "011", "110", "111", "100", "101"],
-        "popyt 0,5": [2, 8, 6, 4, 7, 2, 2, 2],
-        "popyt 0,7": [1, 9, 8, 8, 9, 5, 2, 1]}
+        "popyt 0,5": [2, 8, 5, 4, 8, 2, 2, 2],
+        "popyt 0,7": [1, 10, 8, 8, 10, 5, 1, 1]}
 df = pd.DataFrame(data)
 print(df)
 
@@ -31,16 +32,16 @@ def fitness(a):
     przychod_sok = 0
     if int(a[3]) == 1:
         popyt = df['popyt 0,7'][numer_piwa]
-        przychod_07 = 1
-        koszt_07 = 0.25
+        przychod_07 = 2
+        koszt_07 = 1
     else:
         popyt = df['popyt 0,5'][numer_piwa]
     if int(a[4]) == 1:
-        popyt += 1
+        popyt -= 1
         przychod_sok = 1
         koszt_sok = 0.25
-    wartosc = (4 + przychod_07 + przychod_sok) * popyt
-    koszt = (1 + koszt_07 + koszt_sok) * popyt
+    wartosc = (5 + przychod_07 + przychod_sok) * popyt
+    koszt = (3 + koszt_07 + koszt_sok) * popyt
     przychod_koszt = [wartosc, koszt]
     return przychod_koszt
 
@@ -64,17 +65,16 @@ def statystyki(osobniki):
         procentowy_udzial.append(100 * i / suma_fitness)
     for i in range(1, wielkosc_populacji + 1):
         suma_udzialow.append(sum(procentowy_udzial[0:i]))
-    dane = [osobniki, wartosci_fitness, procentowy_udzial, suma_udzialow, sumy_fitness, sumy_kosztow]
+    dane = [osobniki, wartosci_fitness, procentowy_udzial,
+            suma_udzialow, sumy_fitness, sumy_kosztow]
     df_osobniki = pd.DataFrame(dane).T
-    df_osobniki.columns = ["osobniki", "wartosci fitness", "procentowy udział", "suma udzialow, narastajaco",
+    df_osobniki.columns = ["osobniki", "wartosci fitness",
+                           "procentowy udział", "suma udzialow, narastajaco",
                            "Sumy fitness", "Sumy kosztow"]
     print(df_osobniki)
     print("Suma wartosci fitness:   ", suma_fitness)
     print("Suma kosztow:            ", suma_kosztow)
     return df_osobniki
-
-
-statystyki(osobniki)
 
 
 def reprodukcja(osobniki, df_osobniki):
@@ -118,22 +118,22 @@ def mutacja(osobniki):
             geny_do_mutacji.append(i)
     for i in geny_do_mutacji:
         if int(osobniki[i // 5][i % 5]) == 0:
-            nowy_osobnik = osobniki[i // 5][0:i % 5] + "1" + osobniki[i // 5][(i % 5) + 1:5]
+            nowy_osobnik = osobniki[i // 5][0:i % 5] + \
+                           "1" + osobniki[i // 5][(i % 5) + 1:5]
             osobniki[i // 5] = nowy_osobnik
         else:
-            nowy_osobnik = osobniki[i // 5][0:i % 5] + "0" + osobniki[i // 5][(i % 5) + 1:5]
+            nowy_osobnik = osobniki[i // 5][0:i % 5] + \
+                           "0" + osobniki[i // 5][(i % 5) + 1:5]
             osobniki[i // 5] = nowy_osobnik
     print("Nowa populacja po mutacji: ", osobniki)
     return osobniki
 
 
-print("Tabela piw: ")
-print(df)
 i = 0
 df_osobniki = statystyki(osobniki)
 while ((df_osobniki['Sumy kosztow'][19] < (kapital_poczatkowy - 200) or
         df_osobniki['Sumy kosztow'][19] < (kapital_poczatkowy - 200 + 50))
-       and df_osobniki['Sumy fitness'][19] < 2 * kapital_poczatkowy):
+       and df_osobniki['Sumy fitness'][19] < 2*kapital_poczatkowy):
     i += 1
     print('-' * 100)
     print("Cykl: ", i)
