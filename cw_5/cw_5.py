@@ -314,8 +314,15 @@ for z in range(3):
 
 print("List:\n", *analiza, sep="\n")
 
-suma = 0
-for t in range(1, 23, 8):
-    suma = suma+analiza[t][1]
-
-print(suma)
+wszystkie_sumy = []
+wszystkie_czasy = []
+for u in range(0, 8):
+    suma = 0
+    czas = 0
+    for t in range(u, 23, 8):
+        suma = suma+analiza[t][1]
+        czas = czas+analiza[t][0]
+    wszystkie_sumy.append(suma)
+    wszystkie_czasy.append(czas)
+print(wszystkie_sumy)
+print(wszystkie_czasy)
