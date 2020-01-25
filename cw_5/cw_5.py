@@ -1,12 +1,13 @@
 import math
 import random as rd
 import time
+import pandas as pd
 
 
 def dziesietne_binarne(liczba, n):
     top = (2 ** n) - 1
     if liczba > top:
-        print("Liczba znajduje się poza zakresem.")
+        print("Liczba poza zakresem.")
         string = "1" * n
         return string
     else:
@@ -234,12 +235,12 @@ def MutacjaW(x, x2, n, p_mute):
     return wynik
 
 
-selekcja = input("Wybierz rodzaj selekcji : 0 - selekcja z częściowym zastępowaniem, 1 - elitarna ")
-selekcja = int(selekcja)
-krzyzowanie = input("Wybierz rodzaj krzyrzowania: 0 - jednopunktowe, 1 - dwupunktowe")
-krzyzowanie = int(krzyzowanie)
-mutacja = input("Wybierz rodzaj mutacji: 0 - równomierna, 1 - gaussowska ")
-mutacja = int(mutacja)
+# selekcja = input("Wybierz rodzaj selekcji : 0 - selekcja z czesciowym zastępowaniem, 1 - elitarna ")
+# selekcja = int(selekcja)
+# krzyzowanie = input("Wybierz rodzaj krzyzowania: 0 - jednopunktowe, 1 - dwupunktowe")
+# krzyzowanie = int(krzyzowanie)
+# mutacja = input("Wybierz rodzaj mutacji: 0 - rownomierna, 1 - gaussowska ")
+# mutacja = int(mutacja)
 pokolenia = 2000  # liczba pokolen
 populac = 100  # poczatkowa wielkosc populacji, nowoutworzona populacja osobników.
 wynik = 8  # oczekiwana liczba rezultatow
@@ -251,23 +252,70 @@ nbin = 15
 time1 = time.time()
 x_st = populacja(nbin, populac)
 
-for i in range(pokolenia):
-    y_st = KrzyzowanieW(krzyzowanie, x_st, nbin)
-    z_st1 = MutacjaW(mutacja, y_st[0], nbin, pm)
-    z_st2 = MutacjaW(mutacja, y_st[1], nbin, pm)
-    x_st.append(z_st1)
-    x_st.append(z_st2)
-    nil = len(x_st) - wynik
-    x_st = SelekcjaW(selekcja, x_st, nbin, nil, przedzial_1, przedzial_2)
-time2 = time.time()
-time_score = time2 - time1
-print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
-print("Wynik: ")
-licznik = 0
-x1 = 0
-x2 = 0
-for i in range(len(x_st)):
-    x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
-    x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
-    licznik += 1
-print(x2 / licznik)
+# for i in range(pokolenia):
+#     y_st = KrzyzowanieW(krzyzowanie, x_st, nbin)
+#     z_st1 = MutacjaW(mutacja, y_st[0], nbin, pm)
+#     z_st2 = MutacjaW(mutacja, y_st[1], nbin, pm)
+#     x_st.append(z_st1)
+#     x_st.append(z_st2)
+#     nil = len(x_st) - wynik
+#     x_st = SelekcjaW(selekcja, x_st, nbin, nil, przedzial_1, przedzial_2)
+# time2 = time.time()
+# time_score = time2 - time1
+# print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
+# print("Wynik: ")
+# licznik = 0
+# x1 = 0
+# x2 = 0
+# for i in range(len(x_st)):
+#     x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
+#     x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
+#     licznik += 1
+# print(x2 / licznik)
+
+analiza = []
+# analiza
+print("Analiza")
+for z in range(3):
+    for w in range(2):
+        for j in range(2):
+            for k in range(2):
+                wyniki = []
+                time1 = time.time()
+                selekcja = w
+                krzyzowanie = j
+                mutacja = k
+                for i in range(pokolenia):
+                    y_st = KrzyzowanieW(krzyzowanie, x_st, nbin)
+                    z_st1 = MutacjaW(mutacja, y_st[0], nbin, pm)
+                    z_st2 = MutacjaW(mutacja, y_st[1], nbin, pm)
+                    x_st.append(z_st1)
+                    x_st.append(z_st2)
+                    nil = len(x_st) - wynik
+                    x_st = SelekcjaW(selekcja, x_st, nbin, nil, przedzial_1, przedzial_2)
+                time2 = time.time()
+                time_score = time2 - time1
+                print("_"*100)
+                print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
+                print("Wynik: ")
+                licznik = 0
+                x1 = 0
+                x2 = 0
+                for i in range(len(x_st)):
+                    x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
+                    x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
+                    licznik += 1
+                rezultat = x2/licznik
+                print(w, j, k)
+                print(rezultat)
+                wyniki.append(time_score)
+                wyniki.append(rezultat)
+                analiza.append(wyniki)
+
+print("List:\n", *analiza, sep="\n")
+
+suma = 0
+for t in range(1, 23, 8):
+    suma = suma+analiza[t][1]
+
+print(suma)
