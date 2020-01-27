@@ -311,7 +311,7 @@ for z in range(ile_powtorzen):
                 wyniki.append(rezultat)
                 analiza.append(wyniki)
 
-print(*analiza, sep="\n")
+# print(*analiza, sep="\n")
 
 wszystkie_sumy = []
 wszystkie_czasy = []
@@ -323,8 +323,6 @@ for u in range(0, 8):
         czas = czas + analiza[t][0]
     wszystkie_sumy.append(suma)
     wszystkie_czasy.append(czas)
-print(wszystkie_sumy)
-print(wszystkie_czasy)
 
 sredni_wynik = []
 sredni_czas = []
@@ -335,8 +333,6 @@ for i in range(0, 8):
     sw = wszystkie_sumy[i] / ile_powtorzen
     sredni_wynik.append(sw)
 
-print(sredni_czas)
-print(sredni_wynik)
 
 nazwy = ["000", "001", "010", "011", "100", "101", "110", "111"]
 
