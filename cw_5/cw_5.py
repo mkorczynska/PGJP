@@ -109,23 +109,23 @@ def selekcja_czesciowa(populacja, n1, n2, start, stop):
 
 def krzyzowanie_1(rodzic1, rodzic2, n):
     los = rd.randrange(0, n)
-    temprodzic1 = list(rodzic1)
-    temprodzic2 = list(rodzic2)
-    dl = len(temprodzic1)
+    temp_rodzic1 = list(rodzic1)
+    temp_rodzic2 = list(rodzic2)
+    dl = len(temp_rodzic1)
     wynik1 = []
     wynik2 = []
     wynik = []
     for i in range(dl):
         if i >= los:
-            wynik1.append(temprodzic2[i])
-            wynik2.append(temprodzic1[i])
+            wynik1.append(temp_rodzic2[i])
+            wynik2.append(temp_rodzic1[i])
         else:
-            wynik1.append(temprodzic1[i])
-            wynik2.append(temprodzic2[i])
-    tempstr1 = "".join(wynik1)
-    tempstr2 = "".join(wynik2)
-    wynik.append(tempstr1)
-    wynik.append(tempstr2)
+            wynik1.append(temp_rodzic1[i])
+            wynik2.append(temp_rodzic2[i])
+    temp_str1 = "".join(wynik1)
+    temp_str2 = "".join(wynik2)
+    wynik.append(temp_str1)
+    wynik.append(temp_str2)
     return wynik
 
 
@@ -139,27 +139,27 @@ def krzyzowanie_2(rodzic1, rodzic2, n):
         temp = los1
         los1 = los2
         los2 = temp
-    temprodzic1 = list(rodzic1)
-    temprodzic2 = list(rodzic2)
-    dl = len(temprodzic1)
+    temp_rodzic1 = list(rodzic1)
+    temp_rodzic2 = list(rodzic2)
+    dl = len(temp_rodzic1)
     wynik1 = []
     wynik2 = []
     wynik = []
     for i in range(dl):
         if i >= los1:
             if i >= los2:
-                wynik1.append(temprodzic1[i])
-                wynik2.append(temprodzic2[i])
+                wynik1.append(temp_rodzic1[i])
+                wynik2.append(temp_rodzic2[i])
             else:
-                wynik1.append(temprodzic2[i])
-                wynik2.append(temprodzic1[i])
+                wynik1.append(temp_rodzic2[i])
+                wynik2.append(temp_rodzic1[i])
         else:
-            wynik1.append(temprodzic1[i])
-            wynik2.append(temprodzic2[i])
-    tempstr1 = "".join(wynik1)
-    tempstr2 = "".join(wynik2)
-    wynik.append(tempstr1)
-    wynik.append(tempstr2)
+            wynik1.append(temp_rodzic1[i])
+            wynik2.append(temp_rodzic2[i])
+    temp_str1 = "".join(wynik1)
+    temp_str2 = "".join(wynik2)
+    wynik.append(temp_str1)
+    wynik.append(temp_str2)
     return wynik
 
 
@@ -191,7 +191,7 @@ def mutacja_gaussowska(x, n, p_mute):
     return wynik
 
 
-def SelekcjaW(x, populacja, n1, n2, start, stop):
+def selekcja(x, populacja, n1, n2, start, stop):
     if x == 0:
         wynik = selekcja_czesciowa(populacja, n1, n2, start, stop)
     else:
@@ -202,22 +202,21 @@ def SelekcjaW(x, populacja, n1, n2, start, stop):
 x = populacja(5, 10)
 
 
-def RodziceW(populacja):
+def rodzice(populacja):
     dl = len(populacja)
     wynik = []
     temp = rd.randrange(0, dl)
     wynik.append(temp)
     while True:
         temp2 = rd.randrange(0, dl)
-        # print(temp2)
         if temp2 != temp:
             wynik.append(temp2)
             break
     return wynik
 
 
-def KrzyzowanieW(x, populacja, n):
-    indexes = RodziceW(populacja)
+def krzyzowanie(x, populacja, n):
+    indexes = rodzice(populacja)
     rodzic1 = populacja[indexes[0]]
     rodzic2 = populacja[indexes[1]]
     if x == 0:
@@ -227,75 +226,75 @@ def KrzyzowanieW(x, populacja, n):
     return wynik
 
 
-def MutacjaW(x, x2, n, p_mute):
-    if (x == 0):
+def mutacja(x, x2, n, p_mute):
+    if x == 0:
         wynik = mutacja_rownomierna(x2, n, p_mute)
     else:
         wynik = mutacja_gaussowska(x2, n, p_mute)
     return wynik
 
 
-# selekcja = input("Wybierz rodzaj selekcji : 0 - selekcja z czesciowym zastępowaniem, 1 - elitarna ")
-# selekcja = int(selekcja)
-# krzyzowanie = input("Wybierz rodzaj krzyzowania: 0 - jednopunktowe, 1 - dwupunktowe")
-# krzyzowanie = int(krzyzowanie)
-# mutacja = input("Wybierz rodzaj mutacji: 0 - rownomierna, 1 - gaussowska ")
-# mutacja = int(mutacja)
-pokolenia = 2000  # liczba pokolen
-populac = 100  # poczatkowa wielkosc populacji, nowoutworzona populacja osobników.
-wynik = 8  # oczekiwana liczba rezultatow
-pm = 0.3  # prawdopodobienstwo wystapienia mutacji
-przedzial_1 = 5  # początkowa wartość przedziału
-przedzial_2 = 10  # koncowa wartość przedziału
+selekcja_typ = input("Wybierz rodzaj selekcji : 0 - selekcja z czesciowym zastępowaniem, 1 - elitarna ")
+selekcja_typ = int(selekcja_typ)
+krzyzowanie_typ = input("Wybierz rodzaj krzyzowania: 0 - jednopunktowe, 1 - dwupunktowe")
+krzyzowanie_typ = int(krzyzowanie_typ)
+mutacja_typ = input("Wybierz rodzaj mutacji: 0 - rownomierna, 1 - gaussowska ")
+mutacja_typ = int(mutacja_typ)
+pokolenia = 2000
+populac = 100
+wynik = 8
+pm = 0.3
+przedzial_1 = 5
+przedzial_2 = 10
 nbin = 15
 
 time1 = time.time()
 x_st = populacja(nbin, populac)
 
-# for i in range(pokolenia):
-#     y_st = KrzyzowanieW(krzyzowanie, x_st, nbin)
-#     z_st1 = MutacjaW(mutacja, y_st[0], nbin, pm)
-#     z_st2 = MutacjaW(mutacja, y_st[1], nbin, pm)
-#     x_st.append(z_st1)
-#     x_st.append(z_st2)
-#     nil = len(x_st) - wynik
-#     x_st = SelekcjaW(selekcja, x_st, nbin, nil, przedzial_1, przedzial_2)
-# time2 = time.time()
-# time_score = time2 - time1
-# print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
-# print("Wynik: ")
-# licznik = 0
-# x1 = 0
-# x2 = 0
-# for i in range(len(x_st)):
-#     x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
-#     x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
-#     licznik += 1
-# print(x2 / licznik)
+for i in range(pokolenia):
+    y_st = krzyzowanie(krzyzowanie_typ, x_st, nbin)
+    z_st1 = mutacja(mutacja_typ, y_st[0], nbin, pm)
+    z_st2 = mutacja(mutacja_typ, y_st[1], nbin, pm)
+    x_st.append(z_st1)
+    x_st.append(z_st2)
+    nil = len(x_st) - wynik
+    x_st = selekcja(selekcja_typ, x_st, nbin, nil, przedzial_1, przedzial_2)
+time2 = time.time()
+time_score = time2 - time1
+print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
+print("Wynik: ")
+licznik = 0
+x1 = 0
+x2 = 0
+for i in range(len(x_st)):
+    x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
+    x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
+    licznik += 1
+print(x2 / licznik)
 
 analiza = []
-# analiza
+ile_powtorzen = 100
 print("Analiza")
-for z in range(3):
+for z in range(ile_powtorzen):
     for w in range(2):
         for j in range(2):
             for k in range(2):
                 wyniki = []
                 time1 = time.time()
-                selekcja = w
-                krzyzowanie = j
-                mutacja = k
+                selekcja_typ = w
+                krzyzowanie_typ = j
+                mutacja_typ = k
                 for i in range(pokolenia):
-                    y_st = KrzyzowanieW(krzyzowanie, x_st, nbin)
-                    z_st1 = MutacjaW(mutacja, y_st[0], nbin, pm)
-                    z_st2 = MutacjaW(mutacja, y_st[1], nbin, pm)
+                    y_st = krzyzowanie(krzyzowanie_typ, x_st, nbin)
+                    z_st1 = mutacja(mutacja_typ, y_st[0], nbin, pm)
+                    z_st2 = mutacja(mutacja_typ, y_st[1], nbin, pm)
                     x_st.append(z_st1)
                     x_st.append(z_st2)
                     nil = len(x_st) - wynik
-                    x_st = SelekcjaW(selekcja, x_st, nbin, nil, przedzial_1, przedzial_2)
+                    x_st = selekcja(selekcja_typ, x_st, nbin, nil, przedzial_1, przedzial_2)
                 time2 = time.time()
                 time_score = time2 - time1
-                print("_"*100)
+                print("_" * 100)
                 print("Czas wykonania zadania: ", round(time_score, 2), "sekund")
                 print("Wynik: ")
                 licznik = 0
@@ -305,24 +304,43 @@ for z in range(3):
                     x1 += dost(przedzial_1, przedzial_2, binarne_dziesietne(x_st[i], nbin), nbin)
                     x2 += funkcja(dost(przedzial_1, przedzial_2, nbin, binarne_dziesietne(x_st[i], nbin)))
                     licznik += 1
-                rezultat = x2/licznik
+                rezultat = x2 / licznik
                 print(w, j, k)
                 print(rezultat)
                 wyniki.append(time_score)
                 wyniki.append(rezultat)
                 analiza.append(wyniki)
 
-print("List:\n", *analiza, sep="\n")
+print(*analiza, sep="\n")
 
 wszystkie_sumy = []
 wszystkie_czasy = []
 for u in range(0, 8):
     suma = 0
     czas = 0
-    for t in range(u, 23, 8):
-        suma = suma+analiza[t][1]
-        czas = czas+analiza[t][0]
+    for t in range(u, 8 * ile_powtorzen - 1, 8):
+        suma = suma + analiza[t][1]
+        czas = czas + analiza[t][0]
     wszystkie_sumy.append(suma)
     wszystkie_czasy.append(czas)
 print(wszystkie_sumy)
 print(wszystkie_czasy)
+
+sredni_wynik = []
+sredni_czas = []
+for i in range(0, 8):
+    sc = wszystkie_czasy[i] / ile_powtorzen
+    sredni_czas.append(sc)
+
+    sw = wszystkie_sumy[i] / ile_powtorzen
+    sredni_wynik.append(sw)
+
+print(sredni_czas)
+print(sredni_wynik)
+
+nazwy = ["000", "001", "010", "011", "100", "101", "110", "111"]
+
+df = pd.DataFrame(list(zip(nazwy, sredni_wynik, sredni_czas)),
+                  columns=['Nazwa', 'Sredni wynik', 'Sredni czas'])
+
+print(df)
