@@ -131,20 +131,20 @@ def mutacja(osobniki):
 
 i = 0
 df_osobniki = statystyki(osobniki)
-while ((df_osobniki['Sumy kosztow'][19] < (kapital_poczatkowy - 200) or
-        df_osobniki['Sumy kosztow'][19] < (kapital_poczatkowy - 200 + 50))
-       and df_osobniki['Sumy fitness'][19] < 2*kapital_poczatkowy):
-    i += 1
+while (df_osobniki['Sumy kosztow'][19] < (kapital_poczatkowy - 200+50)
+       and df_osobniki['Sumy fitness'][19] < kapital_poczatkowy):
     print('-' * 100)
     print("Cykl: ", i)
     print('_' * 100)
-    df_osobniki = statystyki(osobniki)
+    # df_osobniki = statystyki(osobniki)
     print('_' * 100)
     osobniki = reprodukcja(osobniki, df_osobniki)
     print('_' * 100)
     osobniki = krzyzowanie(osobniki)
     print('_' * 100)
     osobniki = mutacja(osobniki)
+    df_osobniki = statystyki(osobniki)
+    i += 1
 
 print("Ostateczna populacja: ")
 ostateczne_osobniki = statystyki(osobniki)
